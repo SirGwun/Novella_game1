@@ -1,20 +1,56 @@
 [
   {
     "Id": "start",
-    "Text": "Вы стоите перед входом в лес. Что делать?",
+    "Text": "Вы стоите перед входом в лес. Что делать, $userName?",
     "Choices": [
-      { "Text": "Войти в лес", "NextSceneId": "forest" },
-      { "Text": "Уйти домой", "NextSceneId": "home" }
+      {
+        "Text": "Войти в лес",
+        "NextSceneId": "forest"
+      },
+      {
+        "Text": "Уйти домой",
+        "NextSceneId": "home"
+      }
     ]
   },
   {
     "Id": "forest",
     "Text": "Лес поглощает вас. Вы слышите странные звуки...",
-    "Choices": []
+    "Choices": [
+      {
+        "Text": "Собрать траву",
+        "NextSceneId": "home",
+        "setFlag": "haveGrace"
+      }
+    ]
   },
   {
     "Id": "home",
-    "Text": "Вы решаете, что приключения не для вас. Конец.",
-    "Choices": []
+    "Text": "Вы решаете, что приключения не для вас",
+    "Choices": [
+      {
+        "Text": "Идти к себе в комнату",
+        "NextSceneId": "room"
+      }
+    ]
+  },
+  {
+    "Id": "room",
+    "Text": "Вы видите запертый сундук",
+    "Choices": [
+      {
+        "Text": "Открыть",
+        "NextSceneId": "box",
+        "Conditions": [
+          {
+            "flagName": "haveGrace"
+          }
+        ]
+      },
+      {
+        "Text": "Уйти",
+        "NextSceneId":  "end"
+      }
+    ]
   }
 ]
