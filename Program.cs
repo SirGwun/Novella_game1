@@ -1,8 +1,19 @@
-class Program
+﻿using System;
+using System.Windows.Forms;
+
+namespace MyVN
 {
-    static void Main(string[] args)
+    internal static class Program
     {
-        GameEngine engine = new GameEngine();
-        engine.Start();
+        [STAThread]
+        static void Main()
+        {
+            // ― ручная инициализация ―
+            Application.SetHighDpiMode(HighDpiMode.SystemAware);   // DPI-Aware
+            Application.EnableVisualStyles();                      // современные темы
+            Application.SetCompatibleTextRenderingDefault(false);  // GDI+ для шрифтов
+
+            Application.Run(new MainForm());
+        }
     }
 }
