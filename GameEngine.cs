@@ -1,3 +1,5 @@
+using VisualNovelGame.Models;
+
 public class GameEngine
 {
     private SceneManager sceneManager;
@@ -20,7 +22,15 @@ public class GameEngine
 
             for (int i = 0; i < currentScene.Choices.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {currentScene.Choices[i].Text}");
+                if (currentScene.Choices[i].Conditions == null
+                    || sceneManager.CheckConditions(currentScene.Choices[i].Conditions))
+                {
+                    Console.WriteLine($"{i + 1}. {currentScene.Choices[i].Text}");
+                    if (currentScene.Choices[i].setFlag != null)
+                    {
+                        sceneManager.SetFlag(currentScene.Choices[i].setFlag, true);
+                    }
+                }
             }
 
             int choice = int.Parse(Console.ReadLine()); //todo обработать исключение
