@@ -50,4 +50,16 @@ public class SceneManager
         }
         return true;
     }
+    public List<Choice> GetAvailableChoices(Scene scene)
+    {
+        var result = new List<Choice>();
+        foreach (var choice in scene.Choices) 
+        {
+            if (choice.Conditions == null || CheckConditions(choice.Conditions))
+            {
+                result.Add(choice);
+            }
+        }
+        return result;
+    }
 }

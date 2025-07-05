@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using VisualNovelGame.Models;
 
 public class GameEngine
@@ -13,28 +14,39 @@ public class GameEngine
 
     public void Start()
     {
-        
+
         while (true)
         {
             var currentScene = sceneManager.GetCurrentScene();
+            var availableChoises = sceneManager.GetAvailableChoices(currentScene);
+            int choiceIndex;
+
             Console.Clear();
             Console.WriteLine(currentScene.getText());
 
-            for (int i = 0; i < currentScene.Choices.Count; i++)
+            for (int i = 0; i < availableChoises.Count; i++)
             {
-                if (currentScene.Choices[i].Conditions == null
-                    || sceneManager.CheckConditions(currentScene.Choices[i].Conditions))
+                Console.WriteLine($"{i + 1}. {availableChoises[i].Text}");
+
+            }
+            while (true)
+            {
+                string usersInput = Console.ReadLine();
+                if (int.TryParse(usersInput, out int parsed)
+                    && parsed >= 1
+                    && parsed <= availableChoises.Count)
                 {
-                    Console.WriteLine($"{i + 1}. {currentScene.Choices[i].Text}");
-                    if (currentScene.Choices[i].setFlag != null)
-                    {
-                        sceneManager.SetFlag(currentScene.Choices[i].setFlag, true);
-                    }
+                    choiceIndex = parsed - 1;
+                    break;
                 }
+                Console.WriteLine("Выберите один из предложенных вариантов действий");
             }
 
-            int choice = int.Parse(Console.ReadLine()); //todo обработать исключение
-            sceneManager.GoToNextScene(choice - 1);
+            if (availableChoises[choiceIndex].setFlag != null)
+            {
+                sceneManager.SetFlag(availableChoises[choiceIndex].setFlag, true);
+            }
+            sceneManager.GoToNextScene(choiceIndex);
 
             if (sceneManager.IsGameOver())
                 break;
