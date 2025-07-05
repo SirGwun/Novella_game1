@@ -32,4 +32,30 @@ public class SceneManager
         var sceneList = JsonSerializer.Deserialize<List<Scene>>(json);
         return sceneList.ToDictionary(s => s.Id, s => s);
     }
+
+    public bool CheckConditions(List<Condition> conditions)
+    {
+        for (int i = 0; i < conditions.Count; i++)
+        {
+            if (!flags.ContainsKey(conditions[i].flagName)
+                || !flags[conditions[i].flagName])
+            {
+                return false;
+            }
+
+        }
+        return true;
+    }
+    public List<Choice> GetAvailableChoices(Scene scene)
+    {
+        var result = new List<Choice>();
+        foreach (var choice in scene.Choices) 
+        {
+            if (choice.Conditions == null || CheckConditions(choice.Conditions))
+            {
+                result.Add(choice);
+            }
+        }
+        return result;
+    }
 }
