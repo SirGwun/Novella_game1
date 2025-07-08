@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using VisualNovelGame.Models;
+using NovellGame.Models;
 
 public class SceneManager
 {
-    private Dictionary<string, Scene> scenes;
-    private string currentSceneId;
+    Dictionary<string, Scene> scenes;
+    string currentSceneId;
 
     public SceneManager(string pathToFile)
     {
@@ -16,7 +16,7 @@ public class SceneManager
         currentSceneId = "start";
     }
 
-    public Scene GetCurrentScene() => scenes[currentSceneId];
+    internal Scene GetCurrentScene() => scenes[currentSceneId];
 
     public void GoToNextScene(int choiceIndex)
     {

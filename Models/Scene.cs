@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 
-namespace VisualNovelGame.Models
-{
-    public class Scene
+namespace NovellGame.Models;
+internal class Scene
     {
         public string Id { get; set; }
         public string Text { get; set; }
@@ -15,5 +14,4 @@ namespace VisualNovelGame.Models
             return Text;
         }
 
-    }
-}
+  }

@@ -1,6 +1,8 @@
-﻿namespace NovellGame.Models
+﻿using System.Text.Json.Serialization;
+
+namespace NovellGame.Models;
+internal sealed class FlagCondition : Condition
 {
-    internal class FlagCondition
-    {
-    }
+    [JsonPropertyName("flagName")]
+    public string FlagName {get; set; } = "";
 }

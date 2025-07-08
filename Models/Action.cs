@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NovellGame.Models;
+using System.Text.Json.Serialization;
 
-namespace NovellGame.Models
-{
-    internal interface Action
-    {
-    }
-}
+namespace NovellGame.Models;
+
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type",
+    UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FailSerialization)]
+[JsonDerivedType(typeof(FlagAction), "flagAction")]
+internal interface Action {}

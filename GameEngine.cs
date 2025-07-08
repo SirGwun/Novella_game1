@@ -1,3 +1,6 @@
+using System.Security.Cryptography.X509Certificates;
+using VisualNovelGame.Models;
+
 public class GameEngine
 {
     private SceneManager sceneManager;
@@ -11,20 +14,39 @@ public class GameEngine
 
     public void Start()
     {
-        
+
         while (true)
         {
             var currentScene = sceneManager.GetCurrentScene();
+            var availableChoises = sceneManager.GetAvailableChoices(currentScene);
+            int choiceIndex;
+
             Console.Clear();
             Console.WriteLine(currentScene.getText());
 
-            for (int i = 0; i < currentScene.Choices.Count; i++)
+            for (int i = 0; i < availableChoises.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {currentScene.Choices[i].Text}");
+                Console.WriteLine($"{i + 1}. {availableChoises[i].Text}");
+
+            }
+            while (true)
+            {
+                string usersInput = Console.ReadLine();
+                if (int.TryParse(usersInput, out int parsed)
+                    && parsed >= 1
+                    && parsed <= availableChoises.Count)
+                {
+                    choiceIndex = parsed - 1;
+                    break;
+                }
+                Console.WriteLine("Выберите один из предложенных вариантов действий");
             }
 
-            int choice = int.Parse(Console.ReadLine()); //todo обработать исключение
-            sceneManager.GoToNextScene(choice - 1);
+            if (availableChoises[choiceIndex].setFlag != null)
+            {
+                sceneManager.SetFlag(availableChoises[choiceIndex].setFlag, true);
+            }
+            sceneManager.GoToNextScene(choiceIndex);
 
             if (sceneManager.IsGameOver())
                 break;

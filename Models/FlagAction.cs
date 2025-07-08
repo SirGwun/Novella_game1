@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace NovellGame.Models
+namespace NovellGame.Models;
+
+internal sealed class FlagAction : Action
 {
-    internal class FlagAction
-    {
-    }
+    [JsonPropertyName("flag")]
+    public string FlagName { get; set; } = "";
+    [JsonPropertyName("set")]
+    public bool Set { get; set; } = true;
 }
+
