@@ -1,8 +1,13 @@
 ﻿using System.Text.Json.Serialization;
 
 namespace NovellGame.Models;
-internal sealed class FlagCondition : Condition
+public sealed class FlagCondition : ICondition
 {
-    [JsonPropertyName("flagName")]
+    [JsonPropertyName("flag")]
     public string FlagName {get; set; } = "";
+
+    public bool IsSatisfied(GameState gameState)
+    {
+        return gameState.GetFlag(FlagName);
+    }
 }

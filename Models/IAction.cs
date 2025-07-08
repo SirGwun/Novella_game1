@@ -6,4 +6,7 @@ namespace NovellGame.Models;
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type",
     UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FailSerialization)]
 [JsonDerivedType(typeof(FlagAction), "flagAction")]
-internal interface Action {}
+public interface IAction 
+{
+    public void Execute(GameState gameState);
+}

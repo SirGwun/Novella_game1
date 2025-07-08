@@ -7,11 +7,17 @@ using System.Threading.Tasks;
 
 namespace NovellGame.Models;
 
-internal sealed class FlagAction : Action
+public sealed class FlagAction : IAction
 {
     [JsonPropertyName("flag")]
     public string FlagName { get; set; } = "";
+    
     [JsonPropertyName("set")]
     public bool Set { get; set; } = true;
+
+    public void Execute(GameState gameState)
+    {
+        gameState.SetFlag(FlagName, Set);
+    }
 }
 

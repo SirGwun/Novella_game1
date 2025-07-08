@@ -1,61 +1,67 @@
+using NovellGame.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using NovellGame.Models;
+using static System.Formats.Asn1.AsnWriter;
+using static System.Net.Mime.MediaTypeNames;
 
 public class SceneManager
 {
     Dictionary<string, Scene> scenes;
-    string currentSceneId;
+    GameState stage;
 
-    public SceneManager(string pathToFile)
+    public SceneManager(GameState stage, JsonSceneRepository jsonRepository)
     {
-        scenes = LoadScenes(pathToFile);
-        currentSceneId = "start";
+        scenes = jsonRepository.LoadScenes();
+        this.stage = stage;
     }
 
-    internal Scene GetCurrentScene() => scenes[currentSceneId];
+    public Scene GetCurrentScene()
+    {
+        return scenes[stage.CurSceneId];
+    }
 
     public void GoToNextScene(int choiceIndex)
     {
-        var scene = scenes[currentSceneId];
-        currentSceneId = scene.Choices[choiceIndex].NextSceneId;
-    }
-
-    public bool IsGameOver() => !scenes.ContainsKey(currentSceneId);
-
-    private Dictionary<string, Scene> LoadScenes(string filePath)
-    {
-        string json = File.ReadAllText(filePath);
-        var sceneList = JsonSerializer.Deserialize<List<Scene>>(json);
-        return sceneList.ToDictionary(s => s.Id, s => s);
-    }
-
-    public bool CheckConditions(List<Condition> conditions)
-    {
-        for (int i = 0; i < conditions.Count; i++)
+        try
         {
-            if (!flags.ContainsKey(conditions[i].flagName)
-                || !flags[conditions[i].flagName])
-            {
-                return false;
-            }
-
+            var scene = scenes[stage.CurSceneId];
+            stage.CurSceneId = scene.Choices[choiceIndex].NextSceneId;
+        } catch (KeyNotFoundException)
+        {
+            Console.WriteLine("Сцена не найдена. Проверьте идентификатор сцены.");
+            return;
         }
-        return true;
     }
-    public List<Choice> GetAvailableChoices(Scene scene)
+
+    public List<Choice> GetAvailableChoices()
     {
         var result = new List<Choice>();
-        foreach (var choice in scene.Choices) 
+        foreach (var choice in scenes[stage.CurSceneId].Choices) 
         {
-            if (choice.Conditions == null || CheckConditions(choice.Conditions))
+            bool isAvailable = true;
+            if (choice.Conditions != null)
+            {
+                foreach (var condition in choice.Conditions)
+                {
+                    if (!condition.IsSatisfied(stage))
+                    {
+                        isAvailable = false;
+                        break;
+                    }
+                }
+            }
+
+            if (isAvailable)
             {
                 result.Add(choice);
             }
         }
         return result;
     }
+
+    public bool IsGameOver() => !scenes.ContainsKey(stage.CurSceneId);
 }
